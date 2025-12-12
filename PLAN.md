@@ -36,15 +36,21 @@ A React application that integrates with GitHub to help computer science teacher
 ### Phase 1: GitHub OAuth Integration
 **Goal**: Allow the teacher to connect their GitHub account to fetch student data.
 
-- [ ] **1.1** Set up environment variables for GitHub OAuth
-  - `VITE_GITHUB_CLIENT_ID`
+- [x] **1.1** Set up environment variables for GitHub OAuth
+  - `GITHUB_CLIENT_ID` (Convex env var)
   - `GITHUB_CLIENT_SECRET` (Convex env var)
-- [ ] **1.2** Create Convex schema for storing GitHub connection
-  - `githubConnections` table (userId, accessToken, githubUsername, connectedAt)
-- [ ] **1.3** Create GitHub OAuth flow
+  - `FRONTEND_URL` (Convex env var - for OAuth redirect)
+- [x] **1.2** Create Convex schema for storing GitHub connection
+  - `githubConnections` table (userId, accessToken, githubUsername, githubId, avatarUrl, connectedAt)
+- [x] **1.3** Create GitHub OAuth flow
   - Frontend: "Connect GitHub" button that redirects to GitHub OAuth
   - Backend: Convex HTTP action to handle OAuth callback and exchange code for token
-- [ ] **1.4** Create UI to show GitHub connection status
+  - Created `convex/github.ts` with queries and mutations
+  - Created `convex/http.ts` with OAuth callback handler
+- [x] **1.4** Create UI to show GitHub connection status
+  - Created `GitHubConnection` component with connect/disconnect buttons
+  - Created `GitHubCallback` page to handle OAuth redirect
+  - Created `Dashboard` page with GitHub integration section
 - [ ] **1.5** Test OAuth flow end-to-end
 
 ### Phase 2: Organization & Student Management
@@ -124,10 +130,16 @@ When ready to implement, the teacher will need to:
 1. Go to GitHub Settings → Developer settings → OAuth Apps → New OAuth App
 2. Fill in:
    - **Application name**: Grace Class (or preferred name)
-   - **Homepage URL**: Your deployed URL
-   - **Authorization callback URL**: `https://grace-class.vercel.app/api/github/callback` (or Convex HTTP endpoint)
+   - **Homepage URL**: Your deployed URL (e.g., `https://grace-class.vercel.app`)
+   - **Authorization callback URL**: `https://<your-convex-deployment>.convex.site/api/github/callback`
+     - Get this URL from your Convex dashboard under "Settings" → "URL & Deploy Key"
 3. Save the Client ID and generate a Client Secret
-4. Add these to environment variables
+4. Add these environment variables to Convex (via dashboard or CLI):
+   - `GITHUB_CLIENT_ID` - Your OAuth App's Client ID
+   - `GITHUB_CLIENT_SECRET` - Your OAuth App's Client Secret
+   - `FRONTEND_URL` - Your frontend URL (e.g., `https://grace-class.vercel.app` or `http://localhost:5173` for dev)
+
+**Important**: The callback URL must point to your Convex HTTP endpoint, NOT your frontend URL. Update your GitHub OAuth App settings accordingly.
 
 ---
 
@@ -208,7 +220,7 @@ activities: {
 
 | Phase | Status | Started | Completed |
 |-------|--------|---------|-----------|
-| Phase 1: GitHub OAuth | ⬜ Not Started | - | - |
+| Phase 1: GitHub OAuth | 🟡 In Progress | ✓ | - |
 | Phase 2: Class & Student Management | ⬜ Not Started | - | - |
 | Phase 3: GitHub Activity Fetching | ⬜ Not Started | - | - |
 | Phase 4: Activity Display & Summaries | ⬜ Not Started | - | - |
