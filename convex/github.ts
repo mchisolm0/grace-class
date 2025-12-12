@@ -1,5 +1,5 @@
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { mutation, query, internalQuery } from './_generated/server';
 
 // Query to get the current user's GitHub connection
 export const getConnection = query({
@@ -106,6 +106,21 @@ export const getAccessToken = query({
     const connection = await ctx.db
       .query('githubConnections')
       .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .unique();
+
+    return connection?.accessToken ?? null;
+  },
+});
+
+// Internal query to get access token (for use by other Convex functions)
+export const getAccessTokenInternal = internalQuery({
+  args: {
+    userId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const connection = await ctx.db
+      .query('githubConnections')
+      .withIndex('by_user', (q) => q.eq('userId', args.userId))
       .unique();
 
     return connection?.accessToken ?? null;

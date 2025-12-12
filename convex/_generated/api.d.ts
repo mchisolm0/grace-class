@@ -8,9 +8,13 @@
  * @module
  */
 
+import type * as activities from "../activities.js";
+import type * as classes from "../classes.js";
 import type * as github from "../github.js";
 import type * as http from "../http.js";
 import type * as myFunctions from "../myFunctions.js";
+import type * as organizations from "../organizations.js";
+import type * as students from "../students.js";
 
 import type {
   ApiFromModules,
@@ -19,9 +23,13 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  activities: typeof activities;
+  classes: typeof classes;
   github: typeof github;
   http: typeof http;
   myFunctions: typeof myFunctions;
+  organizations: typeof organizations;
+  students: typeof students;
 }>;
 
 /**
